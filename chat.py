@@ -2,6 +2,8 @@ import sys
 import socket
 import threading
 
+https://prod.liveshare.vsengsaas.visualstudio.com/join?26ABF7BBC7248B8173C525910C98D20ACDDB
+
 def main():
     # program start
     print(sys.version)
@@ -26,7 +28,6 @@ def main():
         print("found new client!!")
         client = threading.Thread(target=worker_thread, args=(connection, address))
         client.start()
-        print("client started!!")
 
     sock.close()
 
@@ -37,8 +38,6 @@ def worker_thread(conn, addr):
         msg = conn.recv(2048)
 
         # prints client's msg to server side
-        print(addr[0])
-        print(msg)
         print("<" + addr[0] + ">" + msg)
 
         # if msg is exit, close this connection and exit
