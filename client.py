@@ -3,15 +3,18 @@ import socket
 import select
 
 def main():
-    if len(sys.argv) != 2:
-        print("correct usage: script, name")
+    if len(sys.argv) != 1:
+        print("correct usage: script")
         exit()
 
     host = "127.0.0.1"
     port = 8080
-    name = str(sys.argv[1])
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.connect((host, port))
+
+    print("What is your name?")
+    name = sys.stdin.readline()
+    server.send(name.encode())
 
     while 1:
         sockets_list = [sys.stdin, server]

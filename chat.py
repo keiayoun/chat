@@ -2,7 +2,7 @@ import sys
 import socket
 import threading
 
-threads = []
+threads = {}
 
 def main():
     # program start
@@ -26,7 +26,8 @@ def main():
         sock.listen()
         connection, address = sock.accept()
         print("found new client!!")
-        threads.append(connection)
+        name = connection.recv(2048)
+        threads[connection] = (name.decode()).strip()
         client = threading.Thread(target=worker_thread, args=(connection, address))
         client.start()
 
@@ -37,11 +38,11 @@ def worker_thread(conn, addr):
     while 1:
         # wait for msg
         msg = conn.recv(2048)
-        msg = msg.decode()
+        msg = (msg.decode()).strip()
 
         # prints client's msg to server side
-        msg_self = "<you>" + msg
-        msg_other = "<" + addr[0] + ">" + msg
+        msg_self = "<you> " + msg
+        msg_other = "<" + threads[conn] + "> " + msg
         print(msg)
 
         # if msg is exit, close this connection and exit
@@ -52,11 +53,12 @@ def worker_thread(conn, addr):
         broadcast_msg(msg_self, msg_other, conn)
 
     # prints to server and client that user has left
-    msg_other = "<" + addr[0] + " has left>"
+    msg_other = "<" + threads[conn] + " has left>"
     msg_self = "<You have left>"
+    msg_other = msg_other.strip()
     print(msg_other)
     broadcast_msg(msg_self, msg_other, conn)
-    threads.remove(conn)
+    del threads[conn]
     conn.close()
 
 
