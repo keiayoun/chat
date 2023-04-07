@@ -34,7 +34,7 @@ def main():
     sock.close()
 
 def worker_thread(conn, addr):
-    print("starting " + addr[0] + " client!")
+    print("starting " + threads[conn] + " client!")
     while 1:
         # wait for msg
         msg = conn.recv(2048)
@@ -43,7 +43,7 @@ def worker_thread(conn, addr):
         # prints client's msg to server side
         msg_self = "<you> " + msg
         msg_other = "<" + threads[conn] + "> " + msg
-        print(msg)
+        print(msg_other)
 
         # if msg is exit, close this connection and exit
         if msg == "exit":
